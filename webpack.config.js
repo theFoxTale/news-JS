@@ -34,6 +34,7 @@ const baseConfig = {
     output: {
         filename: 'index.js',
         path: path.resolve(import.meta.dirname, './dist'),
+        publicPath: '/news-JS/',
         assetModuleFilename: 'assets/[name][ext]',
     },
     plugins: [
