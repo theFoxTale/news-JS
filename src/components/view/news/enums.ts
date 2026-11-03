@@ -14,4 +14,5 @@ export enum NewsCssSelectors {
   NewsReadMoreLink = '.news__read-more a',
   NewsContainer = '.news',
   NewsItemTemplate = '#newsItemTemp',
+  NewsEmptyTemplate = '#newsEmptyTemp',
 }

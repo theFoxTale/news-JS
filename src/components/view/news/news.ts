@@ -8,16 +8,28 @@ const PLACEHOLDER_IMAGE = 'img/news_placeholder.jpg';
 
 export class News {
   private readonly newsItemTemp: HTMLTemplateElement | null;
+  private readonly newsEmptyTemp: HTMLTemplateElement | null;
   private readonly newsContainer: HTMLDivElement | null;
 
   constructor() {
     this.newsItemTemp = queryElement(HTMLTemplateElement, NewsCssSelectors.NewsItemTemplate);
+    this.newsEmptyTemp = queryElement(HTMLTemplateElement, NewsCssSelectors.NewsEmptyTemplate);
     this.newsContainer = queryElement(HTMLDivElement, NewsCssSelectors.NewsContainer);
   }
 
   public draw(data: NewsArticle[]): void {
+    if (!this.newsContainer) {
+      console.warn('newsFile: Required DOM elements not found');
+      return;
+    }
+
+    if (!data.length) {
+      this.drawEmpty();
+      return;
+    }
+
     const tempItem = this.newsItemTemp;
-    if (!tempItem || !this.newsContainer) {
+    if (!tempItem) {
       console.warn('newsFile: Required DOM elements not found');
       return;
     }
@@ -32,6 +44,24 @@ export class News {
 
     this.newsContainer.innerHTML = '';
     this.newsContainer.appendChild(fragment);
+  }
+
+  private drawEmpty(): void {
+    const container = this.newsContainer;
+    if (!container) {
+      return;
+    }
+
+    const emptyTemp = this.newsEmptyTemp;
+    if (!emptyTemp) {
+      // страховка: шаблон не найден — покажем хотя бы текст
+      container.innerHTML = '';
+      container.textContent = 'No news found for this source.';
+      return;
+    }
+
+    container.innerHTML = '';
+    container.appendChild(cloneElement(emptyTemp));
   }
 
   private createNewsItem(tempItem: HTMLTemplateElement, item: NewsArticle, idx: number): DocumentFragment | null {
