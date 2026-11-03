@@ -8,6 +8,7 @@
         "target": "ES2024",
         "module": "ES2022",
         "moduleResolution": "bundler",
+        "types": ["node"],
 
         "allowJs": true,
         "checkJs": false,
