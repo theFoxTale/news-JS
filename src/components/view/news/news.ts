@@ -1,38 +1,18 @@
+import { cloneElement, queryElement } from '../../../utils/helpers';
+import type { NewsArticle, NewsElements } from './types';
+import { ClassNames, CssSelectors } from './enums';
 import './news.css';
-
-interface NewsArticle {
-  urlToImage: string | null;
-  author: string | null;
-  publishedAt: string;
-  title: string | null;
-  description: string | null;
-  url: string;
-  source: {
-    name: string;
-  };
-}
-
-interface NewsElements {
-  item: HTMLElement;
-  photo: HTMLElement;
-  author: HTMLElement;
-  date: HTMLElement;
-  title: HTMLElement;
-  source: HTMLElement;
-  content: HTMLElement;
-  link: HTMLElement;
-}
 
 const MAX_NEWS_ITEMS = 10;
 const PLACEHOLDER_IMAGE = 'img/news_placeholder.jpg';
 
 class News {
   private readonly newsItemTemp: HTMLTemplateElement | null;
-  private readonly newsContainer: HTMLElement | null;
+  private readonly newsContainer: HTMLDivElement | null;
 
   constructor() {
-    this.newsItemTemp = document.querySelector('#newsItemTemp');
-    this.newsContainer = document.querySelector('.news');
+    this.newsItemTemp = queryElement(HTMLTemplateElement, CssSelectors.NewsItemTemplate);
+    this.newsContainer = queryElement(HTMLDivElement, CssSelectors.NewsContainer);
   }
 
   public draw(data: NewsArticle[]): void {
@@ -55,7 +35,7 @@ class News {
   }
 
   private createNewsItem(tempItem: HTMLTemplateElement, item: NewsArticle, idx: number): DocumentFragment | null {
-    const clone: DocumentFragment = tempItem.content.cloneNode(true) as DocumentFragment;
+    const clone: DocumentFragment = cloneElement(tempItem);
 
     const elements: NewsElements | null = this.getElementRefs(clone);
     if (!elements) {
@@ -63,23 +43,21 @@ class News {
       return null;
     }
 
-    if (idx % 2) {
-      elements.item.classList.add('alt');
-    }
+    elements.item.classList.add(idx % 2 ? ClassNames.Alt : ClassNames.Default);
 
     this.populateElement(elements, item);
     return clone;
   }
 
   private getElementRefs(clone: DocumentFragment): NewsElements | null {
-    const item = clone.querySelector<HTMLElement>('.news__item');
-    const photo = clone.querySelector<HTMLElement>('.news__meta-photo');
-    const author = clone.querySelector<HTMLElement>('.news__meta-author');
-    const date = clone.querySelector<HTMLElement>('.news__meta-date');
-    const title = clone.querySelector<HTMLElement>('.news__description-title');
-    const source = clone.querySelector<HTMLElement>('.news__description-source');
-    const content = clone.querySelector<HTMLElement>('.news__description-content');
-    const link = clone.querySelector<HTMLElement>('.news__read-more a');
+    const item = queryElement(HTMLDivElement, CssSelectors.NewsItem, clone);
+    const photo = queryElement(HTMLDivElement, CssSelectors.NewsMetaPhoto, clone);
+    const author = queryElement(HTMLLIElement, CssSelectors.NewsMetaAuthor, clone);
+    const date = queryElement(HTMLLIElement, CssSelectors.NewsMetaDate, clone);
+    const title = queryElement(HTMLHeadingElement, CssSelectors.NewsDescriptionTitle, clone);
+    const source = queryElement(HTMLHeadingElement, CssSelectors.NewsDescriptionSource, clone);
+    const content = queryElement(HTMLParagraphElement, CssSelectors.NewsDescriptionContent, clone);
+    const link = queryElement(HTMLAnchorElement, CssSelectors.NewsReadMoreLink, clone);
 
     if (!item || !photo || !author || !date || !title || !source || !content || !link) {
       return null;
