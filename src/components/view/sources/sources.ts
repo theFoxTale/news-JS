@@ -26,7 +26,10 @@ export class Sources {
     try {
       this.checkInputData(data);
       const sourcesContainer: HTMLDivElement = queryElement(HTMLDivElement, SourcesCssSelectors.SourcesContainer);
-      const sourceItemTemp: HTMLTemplateElement = queryElement(HTMLTemplateElement, SourcesCssSelectors.SourceItemTemplate);
+      const sourceItemTemp: HTMLTemplateElement = queryElement(
+        HTMLTemplateElement,
+        SourcesCssSelectors.SourceItemTemplate
+      );
 
       const fragment: DocumentFragment = document.createDocumentFragment();
       data.forEach((item: SourceItem): void => {

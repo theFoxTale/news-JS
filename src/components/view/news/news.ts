@@ -54,7 +54,6 @@ export class News {
 
     const emptyTemp = this.newsEmptyTemp;
     if (!emptyTemp) {
-      // страховка: шаблон не найден — покажем хотя бы текст
       container.innerHTML = '';
       container.textContent = 'No news found for this source.';
       return;

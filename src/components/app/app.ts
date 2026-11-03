@@ -90,19 +90,19 @@ export class App {
   private loadFirstSourceNews(): Promise<void> {
     const firstSource = this.sourcesContainer.querySelector<HTMLElement>(SourcesCssSelectors.SourceItem);
     if (!firstSource) {
-      console.log("Test 1");
+      console.log('Test 1');
       return Promise.resolve();
     }
 
     const sourceId = firstSource.getAttribute(DataAttributes.SourceId);
     if (!sourceId) {
-      console.log("Test 2");
+      console.log('Test 2');
       return Promise.resolve();
     }
 
     firstSource.classList.add(SourceItemsClassNames.ActiveSource);
 
-    console.log("Test 3");
+    console.log('Test 3');
     return this.controller.getNewsBySourceId(this.sourcesContainer, sourceId, (data: ApiNewsResponse): void => {
       this.view.drawNews(data);
     });
