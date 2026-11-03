@@ -22,10 +22,10 @@ export class AppController extends AppLoader {
       return Promise.resolve();
     }
 
-    // Ищем ближайший .source__item, но только внутри newsContainer
-    const newsContainer = checkEventTargetElement(HTMLElement, e.currentTarget);
+    // Ищем ближайший .source__item
+    const sourcesContainer = checkEventTargetElement(HTMLElement, e.currentTarget);
     const sourceItem = e.target.closest<HTMLElement>(SourcesCssSelectors.SourceItem);
-    if (!sourceItem || sourceItem === newsContainer || !newsContainer.contains(sourceItem)) {
+    if (!sourceItem || sourceItem === sourcesContainer || !sourcesContainer.contains(sourceItem)) {
       return Promise.resolve();
     }
 
@@ -34,19 +34,19 @@ export class AppController extends AppLoader {
       return Promise.resolve();
     }
 
-    return this.getNewsBySourceId(newsContainer, sourceId, callback);
+    return this.getNewsBySourceId(sourcesContainer, sourceId, callback);
   }
 
   public getNewsBySourceId(
-    newsContainer: HTMLElement,
+    sourcesContainer: HTMLElement,
     sourceId: string,
     callback: (data: ApiNewsResponse) => void
   ): Promise<void> {
-    if (newsContainer.getAttribute(DataAttributes.Source) === sourceId) {
+    if (sourcesContainer.getAttribute(DataAttributes.Source) === sourceId) {
       return Promise.resolve();
     }
 
-    newsContainer.setAttribute(DataAttributes.Source, sourceId);
+    sourcesContainer.setAttribute(DataAttributes.Source, sourceId);
     return super.getResp(
       {
         endpoint: ApiEndpoints.Everything,
