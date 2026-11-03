@@ -15,8 +15,8 @@ export class Loader {
     callback: TCallback<T> = (): void => {
       console.error('No callback for GET response');
     }
-  ): void {
-    this.load('GET', endpoint, callback, options);
+  ): Promise<void> {
+    return this.load('GET', endpoint, callback, options);
   }
 
   private errorHandler(res: Response): Response {
@@ -40,8 +40,13 @@ export class Loader {
     return url.slice(0, -1);
   }
 
-  private load<T>(method: HttpMethod, endpoint: string, callback: TCallback<T>, options: RequestOptions): void {
-    fetch(this.makeUrl(options, endpoint), { method })
+  private load<T>(
+    method: HttpMethod,
+    endpoint: string,
+    callback: TCallback<T>,
+    options: RequestOptions
+  ): Promise<void> {
+    return fetch(this.makeUrl(options, endpoint), { method })
       .then((res) => this.errorHandler(res))
       .then((res: Response): Promise<T> => res.json())
       .then((data: T): void => callback(data))

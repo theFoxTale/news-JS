@@ -11,4 +11,5 @@ export enum ButtonsSelectors {
 
 export enum CssSelectors {
   YearItem = '.current_year',
+  Loader = '.loader',
 }

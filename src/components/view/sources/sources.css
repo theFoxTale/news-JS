@@ -28,12 +28,35 @@
     display: none;
 }
 
-.source__item:hover,
-.source__item:focus {
+.source__item:hover:not(.source__item_active),
+.source__item:focus-visible:not(.source__item_active) {
     border-color: #3fcc59;
     color: #69db7e;
     box-shadow: 0 0.5em 0.5em -0.4em #3fcc59;
     transform: translateY(-0.25em);
+}
+
+.source__item:focus:not(:focus-visible) {
+    outline: none;
+}
+
+.source__item_active {
+    background: linear-gradient(45deg, #4facfe, #00f2fe);
+    border-color: #4facfe;
+    color: #17181c;
+    box-shadow: 0 0 14px rgba(79, 172, 254, 0.5);
+    transform: none;
+}
+
+.source__item_active:hover {
+    background: linear-gradient(45deg, #5fb8ff, #00f2fe);
+    border-color: #5fb8ff;
+    box-shadow: 0 0 20px rgba(79, 172, 254, 0.65);
+    transform: none;
+}
+
+.source__item_active .source__item-name {
+    font-weight: 600;
 }
 
 .source__item-name {

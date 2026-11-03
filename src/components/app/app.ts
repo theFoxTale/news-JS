@@ -7,7 +7,7 @@ import type { ApiNewsResponse } from '../view/news/types';
 import type { ApiSourceResponse } from '../view/sources/types';
 
 import { ButtonsClassNames, ButtonsSelectors, CssSelectors } from './enums';
-import { SourceItemsClassNames, SourcesCssSelectors } from '../view/sources/enums';
+import { SourceItemsClassNames, SourcesCssSelectors, DataAttributes } from '../view/sources/enums';
 
 export class App {
   private controller: AppController;
@@ -16,6 +16,7 @@ export class App {
   private sourcesContainer!: HTMLDivElement;
   private buttonPrev!: HTMLButtonElement;
   private buttonNext!: HTMLButtonElement;
+  private loader!: HTMLDivElement;
 
   private totalSources: number = 0;
   private firstSourceIndex: number = 0;
@@ -31,39 +32,79 @@ export class App {
     this.sourcesContainer = queryElement(HTMLDivElement, SourcesCssSelectors.SourcesContainer);
     this.buttonPrev = queryElement(HTMLButtonElement, ButtonsSelectors.PreviousButton);
     this.buttonNext = queryElement(HTMLButtonElement, ButtonsSelectors.NextButton);
+    this.loader = queryElement(HTMLDivElement, CssSelectors.Loader);
 
-    this.buttonPrev.addEventListener('click', (): void => {
-      this.hideVisibleSources();
-      this.lastSourceIndex = Math.max(0, this.firstSourceIndex - 1);
-      this.prevSourcesItems();
-      this.updateButtonStates();
-    });
-
-    this.buttonNext.addEventListener('click', (): void => {
-      const maxIndex: number = this.totalSources - this.scrollStep;
-      if (this.firstSourceIndex < maxIndex) {
-        this.hideVisibleSources();
-        this.firstSourceIndex = Math.min(maxIndex, this.lastSourceIndex + 1);
-        this.nextSourcesItems();
-      }
-      this.updateButtonStates();
-    });
-
-    this.sourcesContainer.addEventListener('click', (e: Event): void => {
-      this.controller.getNews(e, (data: ApiNewsResponse): void => {
-        this.view.drawNews(data);
-        this.markActiveSource(e);
-      });
-    });
+    this.buttonPrev.addEventListener('click', this.handlePrevClick);
+    this.buttonNext.addEventListener('click', this.handleNextClick);
+    this.sourcesContainer.addEventListener('click', this.handleSourceClick);
 
     this.updateScrollStep();
-    window.addEventListener('resize', (): void => {
-      this.updateScrollStep();
-      if (this.totalSources === 0) {
-        return;
-      }
+    window.addEventListener('resize', this.handleResize);
+  }
+
+  private handlePrevClick = (): void => {
+    this.hideVisibleSources();
+    this.lastSourceIndex = Math.max(0, this.firstSourceIndex - 1);
+    this.prevSourcesItems();
+    this.updateButtonStates();
+  };
+
+  private handleNextClick = (): void => {
+    const maxIndex: number = this.totalSources - this.scrollStep;
+    if (this.firstSourceIndex < maxIndex) {
+      this.hideVisibleSources();
+      this.firstSourceIndex = Math.min(maxIndex, this.lastSourceIndex + 1);
       this.nextSourcesItems();
-      this.updateButtonStates();
+    }
+    this.updateButtonStates();
+  };
+
+  private handleSourceClick = (e: Event): void => {
+    this.showLoader();
+    this.controller
+      .getNews(e, (data: ApiNewsResponse): void => {
+        this.view.drawNews(data);
+        this.markActiveSource(e);
+      })
+      .finally(() => this.hideLoader());
+  };
+
+  private handleResize = (): void => {
+    this.updateScrollStep();
+    if (this.totalSources === 0) {
+      return;
+    }
+    this.nextSourcesItems();
+    this.updateButtonStates();
+  };
+
+  private showLoader(): void {
+    this.loader.classList.remove('hidden');
+  }
+
+  private hideLoader(): void {
+    this.loader.classList.add('hidden');
+  }
+
+  /** Загружает новости для первого источника (активного по умолчанию). */
+  private loadFirstSourceNews(): Promise<void> {
+    const firstSource = this.sourcesContainer.querySelector<HTMLElement>(SourcesCssSelectors.SourceItem);
+    if (!firstSource) {
+      console.log("Test 1");
+      return Promise.resolve();
+    }
+
+    const sourceId = firstSource.getAttribute(DataAttributes.SourceId);
+    if (!sourceId) {
+      console.log("Test 2");
+      return Promise.resolve();
+    }
+
+    firstSource.classList.add(SourceItemsClassNames.ActiveSource);
+
+    console.log("Test 3");
+    return this.controller.getNewsBySourceId(this.sourcesContainer, sourceId, (data: ApiNewsResponse): void => {
+      this.view.drawNews(data);
     });
   }
 
@@ -199,15 +240,25 @@ export class App {
     this.setCurrentYear();
     this.initCarousel();
 
-    this.controller.getSources((data: ApiSourceResponse): void => {
-      this.view.drawSources(data);
+    this.showLoader();
 
-      this.totalSources = this.sourcesContainer.children.length;
+    this.controller
+      .getSources((data: ApiSourceResponse): void => {
+        this.view.drawSources(data);
 
-      if (this.totalSources > 0) {
-        this.initButtonsStates();
-        this.nextSourcesItems();
-      }
-    });
+        this.totalSources = this.sourcesContainer.children.length;
+
+        if (this.totalSources > 0) {
+          this.initButtonsStates();
+          this.nextSourcesItems();
+        }
+      })
+      .then((): Promise<void> => {
+        if (this.totalSources > 0) {
+          return this.loadFirstSourceNews();
+        }
+        return Promise.resolve();
+      })
+      .finally(() => this.hideLoader());
   }
 }
