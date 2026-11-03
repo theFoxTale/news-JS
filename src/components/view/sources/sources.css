@@ -1,34 +1,101 @@
 .sources {
-    display: flex;
-    flex-wrap: nowrap;
-    width: 100%;
-    height: 120px;
-    overflow: auto;
-    align-items: center;
-    font: 300 1em 'Fira Sans', sans-serif;
+  display: flex;
+  flex-wrap: nowrap;
+  width: 100%;
+  height: 90px;
+  overflow: hidden;
+  align-items: center;
+  justify-content: center;
+  font:
+    300 1em 'Fira Sans',
+    sans-serif;
 }
 
 .source__item {
-    background: none;
-    border: 2px solid #30c5ff;
-    font: inherit;
-    line-height: 1;
-    margin: 0.5em;
-    padding: 1em 2em;
-    color: #70d6ff;
-    transition: 0.25s;
-    cursor: pointer;
+  background: none;
+  border: 2px solid #30c5ff;
+  border-radius: 20px;
+  font: inherit;
+  line-height: 1;
+  margin: 0.5em;
+  padding: 1em 2em;
+  color: #70d6ff;
+  transition: 0.25s;
+  cursor: pointer;
 }
 
-.source__item:hover,
-.source__item:focus {
-    border-color: #3fcc59;
-    color: #69db7e;
-    box-shadow: 0 0.5em 0.5em -0.4em #3fcc59;
-    transform: translateY(-0.25em);
+.hidden_item {
+  display: none;
+}
+
+.source__item:hover:not(.source__item_active),
+.source__item:focus-visible:not(.source__item_active) {
+  border-color: #3fcc59;
+  color: #69db7e;
+  box-shadow: 0 0.5em 0.5em -0.4em #3fcc59;
+  transform: translateY(-0.25em);
+}
+
+.source__item:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.source__item_active {
+  background: linear-gradient(45deg, #4facfe, #00f2fe);
+  border-color: #4facfe;
+  color: #17181c;
+  box-shadow: 0 0 14px rgba(79, 172, 254, 0.5);
+  transform: none;
+}
+
+.source__item_active:hover {
+  background: linear-gradient(45deg, #5fb8ff, #00f2fe);
+  border-color: #5fb8ff;
+  box-shadow: 0 0 20px rgba(79, 172, 254, 0.65);
+  transform: none;
+}
+
+.source__item_active .source__item-name {
+  font-weight: 600;
 }
 
 .source__item-name {
-    font-weight: 400;
-    white-space: nowrap;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.sources__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #a2a2a2;
+    font-size: 1.5rem;
+}
+
+.sources__empty-icon {
+    font-size: 2.5rem;
+    opacity: 0.7;
+}
+
+@media (max-width: 480px) {
+    .source__item {
+        padding: 0.5em 1em;
+    }
+
+    .sources__empty {
+        font-size: 0.9rem;
+        gap: 6px;
+    }
+
+    .sources__empty-icon {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+  .source__item {
+    padding: 0.5em 1em;
+  }
 }
