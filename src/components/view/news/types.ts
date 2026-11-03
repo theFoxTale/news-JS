@@ -20,3 +20,10 @@ export interface NewsElements {
   content: HTMLElement;
   link: HTMLElement;
 }
+
+// {"status":"ok","totalResults":2836,"articles":[]}
+export interface ApiNewsResponse {
+  status: string;
+  totalResults: number;
+  articles: NewsArticle[];
+}

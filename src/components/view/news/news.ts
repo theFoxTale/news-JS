@@ -6,7 +6,7 @@ import './news.css';
 const MAX_NEWS_ITEMS = 10;
 const PLACEHOLDER_IMAGE = 'img/news_placeholder.jpg';
 
-class News {
+export class News {
   private readonly newsItemTemp: HTMLTemplateElement | null;
   private readonly newsContainer: HTMLDivElement | null;
 
@@ -80,5 +80,3 @@ class News {
     return publishedAt.slice(0, 10).split('-').reverse().join('-');
   }
 }
-
-export default News;
