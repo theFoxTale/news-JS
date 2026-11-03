@@ -1,0 +1,12 @@
+# Игнорировать файлы конфигурации
+eslint.config.js
+webpack.config.js
+webpack.dev.config.js
+webpack.prod.config.js
+package.json
+tsconfig.json
+README.md
+
+# Игнорировать папки
+node_modules
+dist
