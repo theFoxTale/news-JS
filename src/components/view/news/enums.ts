@@ -3,7 +3,7 @@ export enum ClassNames {
   Default = 'usual',
 }
 
-export enum CssSelectors {
+export enum NewsCssSelectors {
   NewsItem = '.news__item',
   NewsMetaPhoto = '.news__meta-photo',
   NewsMetaAuthor = '.news__meta-author',

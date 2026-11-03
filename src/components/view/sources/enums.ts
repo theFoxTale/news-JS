@@ -1,4 +1,4 @@
-export enum CssSelectors {
+export enum SourcesCssSelectors {
   SourceItemTemplate = '#sourceItemTemp',
   SourcesContainer = '.sources',
   SourceItem = '.source__item',

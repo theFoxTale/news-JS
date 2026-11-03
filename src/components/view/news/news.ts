@@ -1,6 +1,6 @@
 import { cloneElement, queryElement } from '../../../utils/helpers';
 import type { NewsArticle, NewsElements } from './types';
-import { ClassNames, CssSelectors } from './enums';
+import { ClassNames, NewsCssSelectors } from './enums';
 import './news.css';
 
 const MAX_NEWS_ITEMS = 10;
@@ -11,8 +11,8 @@ export class News {
   private readonly newsContainer: HTMLDivElement | null;
 
   constructor() {
-    this.newsItemTemp = queryElement(HTMLTemplateElement, CssSelectors.NewsItemTemplate);
-    this.newsContainer = queryElement(HTMLDivElement, CssSelectors.NewsContainer);
+    this.newsItemTemp = queryElement(HTMLTemplateElement, NewsCssSelectors.NewsItemTemplate);
+    this.newsContainer = queryElement(HTMLDivElement, NewsCssSelectors.NewsContainer);
   }
 
   public draw(data: NewsArticle[]): void {
@@ -50,14 +50,14 @@ export class News {
   }
 
   private getElementRefs(clone: DocumentFragment): NewsElements | null {
-    const item = queryElement(HTMLDivElement, CssSelectors.NewsItem, clone);
-    const photo = queryElement(HTMLDivElement, CssSelectors.NewsMetaPhoto, clone);
-    const author = queryElement(HTMLLIElement, CssSelectors.NewsMetaAuthor, clone);
-    const date = queryElement(HTMLLIElement, CssSelectors.NewsMetaDate, clone);
-    const title = queryElement(HTMLHeadingElement, CssSelectors.NewsDescriptionTitle, clone);
-    const source = queryElement(HTMLHeadingElement, CssSelectors.NewsDescriptionSource, clone);
-    const content = queryElement(HTMLParagraphElement, CssSelectors.NewsDescriptionContent, clone);
-    const link = queryElement(HTMLAnchorElement, CssSelectors.NewsReadMoreLink, clone);
+    const item = queryElement(HTMLDivElement, NewsCssSelectors.NewsItem, clone);
+    const photo = queryElement(HTMLDivElement, NewsCssSelectors.NewsMetaPhoto, clone);
+    const author = queryElement(HTMLLIElement, NewsCssSelectors.NewsMetaAuthor, clone);
+    const date = queryElement(HTMLLIElement, NewsCssSelectors.NewsMetaDate, clone);
+    const title = queryElement(HTMLHeadingElement, NewsCssSelectors.NewsDescriptionTitle, clone);
+    const source = queryElement(HTMLHeadingElement, NewsCssSelectors.NewsDescriptionSource, clone);
+    const content = queryElement(HTMLParagraphElement, NewsCssSelectors.NewsDescriptionContent, clone);
+    const link = queryElement(HTMLAnchorElement, NewsCssSelectors.NewsReadMoreLink, clone);
 
     if (!item || !photo || !author || !date || !title || !source || !content || !link) {
       return null;

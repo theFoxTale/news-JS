@@ -47,7 +47,7 @@ export function checkEventTargetElement<T extends typeof Element>(
   type: T,
   element: EventTarget | null
 ): InstanceType<T> {
-  if (element !== null && !(element instanceof type)) {
+  if (element === null || !(element instanceof type)) {
     throw new Error(`Required event elements not found.`);
   }
   return element as InstanceType<T>;
