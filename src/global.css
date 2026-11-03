@@ -170,15 +170,15 @@ body {
 
 .site-footer p {
     font-size: 14px;
-    color: #333;
+    color: #999;
 }
 
 .site-footer .copyright a {
-    color: #444;
+    color: #999;
 }
 
 .site-footer .copyright a:hover {
-    color: #555;
+    color: #70d6ff;
 }
 
 .site-footer .current_year:before {
