@@ -66,6 +66,10 @@ export class App {
         this.view.drawNews(data);
         this.markActiveSource(e);
       })
+      .catch((error: Error): void => {
+        console.error('Failed to load news:', error);
+        this.view.drawNews({ status: 'error', totalResults: 0, articles: [] });
+      })
       .finally(() => this.hideLoader());
   };
 
@@ -90,22 +94,24 @@ export class App {
   private loadFirstSourceNews(): Promise<void> {
     const firstSource = this.sourcesContainer.querySelector<HTMLElement>(SourcesCssSelectors.SourceItem);
     if (!firstSource) {
-      console.log('Test 1');
       return Promise.resolve();
     }
 
     const sourceId = firstSource.getAttribute(DataAttributes.SourceId);
     if (!sourceId) {
-      console.log('Test 2');
       return Promise.resolve();
     }
 
     firstSource.classList.add(SourceItemsClassNames.ActiveSource);
 
-    console.log('Test 3');
-    return this.controller.getNewsBySourceId(this.sourcesContainer, sourceId, (data: ApiNewsResponse): void => {
-      this.view.drawNews(data);
-    });
+    return this.controller
+      .getNewsBySourceId(this.sourcesContainer, sourceId, (data: ApiNewsResponse): void => {
+        this.view.drawNews(data);
+      })
+      .catch((error: Error): void => {
+        console.error('Failed to load initial news:', error);
+        this.view.drawNews({ status: 'error', totalResults: 0, articles: [] });
+      });
   }
 
   private updateScrollStep(): void {
@@ -239,25 +245,25 @@ export class App {
   public start(): void {
     this.setCurrentYear();
     this.initCarousel();
-
     this.showLoader();
 
     this.controller
       .getSources((data: ApiSourceResponse): void => {
         this.view.drawSources(data);
-
-        this.totalSources = this.sourcesContainer.children.length;
-
+        this.totalSources = this.sourcesContainer.querySelectorAll(SourcesCssSelectors.SourceItem).length;
         if (this.totalSources > 0) {
           this.initButtonsStates();
           this.nextSourcesItems();
         }
       })
-      .then((): Promise<void> => {
+      .then((): Promise<void> | void => {
         if (this.totalSources > 0) {
           return this.loadFirstSourceNews();
         }
-        return Promise.resolve();
+      })
+      .catch((error: Error): void => {
+        console.error('Failed to load sources:', error);
+        this.view.drawSources({ status: 'error', sources: [] });
       })
       .finally(() => this.hideLoader());
   }

@@ -50,6 +50,9 @@ export class Loader {
       .then((res) => this.errorHandler(res))
       .then((res: Response): Promise<T> => res.json())
       .then((data: T): void => callback(data))
-      .catch((err: Error): void => console.error(err));
+      .catch((err: Error): never => {
+        console.error(err);
+        throw err;
+      });
   }
 }

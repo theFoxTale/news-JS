@@ -4,15 +4,30 @@ import type { SourceItem } from './types';
 import './sources.css';
 
 export class Sources {
-  private checkInputData(data: SourceItem[]): void {
+  public draw(data: SourceItem[]): void {
+    const sourcesContainer = queryElement(HTMLDivElement, SourcesCssSelectors.SourcesContainer);
+    sourcesContainer.innerHTML = '';
+
     if (!data?.length) {
-      throw new Error('Sources: no data to draw');
+      this.drawEmpty(sourcesContainer);
+      return;
+    }
+
+    try {
+      const sourceItemTemp = queryElement(HTMLTemplateElement, SourcesCssSelectors.SourceItemTemplate);
+      const fragment = document.createDocumentFragment();
+      data.forEach((item: SourceItem): void => {
+        fragment.append(this.drawItem(sourceItemTemp, item));
+      });
+      sourcesContainer.append(fragment);
+    } catch (error) {
+      console.log('Sources -> draw failed: ', error);
+      this.drawEmpty(sourcesContainer);
     }
   }
 
   private drawItem(itemTemplate: HTMLTemplateElement, item: SourceItem): Node {
     const sourceClone: DocumentFragment = cloneElement(itemTemplate);
-
     const nameElement: HTMLSpanElement = queryElement(HTMLSpanElement, SourcesCssSelectors.SourceItemName, sourceClone);
     const idElement: HTMLDivElement = queryElement(HTMLDivElement, SourcesCssSelectors.SourceItem, sourceClone);
 
@@ -22,24 +37,12 @@ export class Sources {
     return sourceClone;
   }
 
-  public draw(data: SourceItem[]): void {
-    try {
-      this.checkInputData(data);
-      const sourcesContainer: HTMLDivElement = queryElement(HTMLDivElement, SourcesCssSelectors.SourcesContainer);
-      const sourceItemTemp: HTMLTemplateElement = queryElement(
-        HTMLTemplateElement,
-        SourcesCssSelectors.SourceItemTemplate
-      );
-
-      const fragment: DocumentFragment = document.createDocumentFragment();
-      data.forEach((item: SourceItem): void => {
-        const sourceClone: Node = this.drawItem(sourceItemTemp, item);
-        fragment.append(sourceClone);
-      });
-
-      sourcesContainer.append(fragment);
-    } catch (error) {
-      console.log('Sources -> draw failed: ', error);
+  private drawEmpty(container: HTMLDivElement): void {
+    const emptyTemp = document.querySelector<HTMLTemplateElement>(SourcesCssSelectors.SourceEmptyTemplate);
+    if (!emptyTemp) {
+      container.textContent = 'No sources available';
+      return;
     }
+    container.appendChild(cloneElement(emptyTemp));
   }
 }

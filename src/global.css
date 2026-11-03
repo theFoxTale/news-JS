@@ -138,6 +138,7 @@ body {
 .hidden_button {
   opacity: 0;
   cursor: none;
+  pointer-events: none;
 }
 
 .news-section {

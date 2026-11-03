@@ -38,21 +38,26 @@ export class AppController extends AppLoader {
   }
 
   public getNewsBySourceId(
-    sourcesContainer: HTMLElement,
+    newsContainer: HTMLElement,
     sourceId: string,
     callback: (data: ApiNewsResponse) => void
   ): Promise<void> {
-    if (sourcesContainer.getAttribute(DataAttributes.Source) === sourceId) {
+    if (newsContainer.getAttribute(DataAttributes.Source) === sourceId) {
       return Promise.resolve();
     }
 
-    sourcesContainer.setAttribute(DataAttributes.Source, sourceId);
-    return super.getResp(
-      {
-        endpoint: ApiEndpoints.Everything,
-        options: { sources: sourceId },
-      },
-      callback
-    );
+    newsContainer.setAttribute(DataAttributes.Source, sourceId);
+    return super
+      .getResp(
+        {
+          endpoint: ApiEndpoints.Everything,
+          options: { sources: sourceId },
+        },
+        callback
+      )
+      .catch((err: Error): never => {
+        newsContainer.removeAttribute(DataAttributes.Source);
+        throw err;
+      });
   }
 }
