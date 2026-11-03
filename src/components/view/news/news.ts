@@ -67,11 +67,13 @@ export class News {
   }
 
   private populateElement(el: NewsElements, item: NewsArticle): void {
+    const sourceName = item.source?.name ?? '';
+
     el.photo.style.backgroundImage = `url(${item.urlToImage || PLACEHOLDER_IMAGE})`;
-    el.author.textContent = item.author || item.source.name;
+    el.author.textContent = item.author || sourceName;
     el.date.textContent = this.formatDate(item.publishedAt);
     el.title.textContent = item.title ?? '';
-    el.source.textContent = item.source.name;
+    el.source.textContent = sourceName;
     el.content.textContent = item.description ?? '';
     el.link.setAttribute('href', item.url);
   }

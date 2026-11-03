@@ -18,33 +18,32 @@ export class AppController extends AppLoader {
   }
 
   public getNews(e: Event, callback: (data: ApiNewsResponse) => void): void {
-    const newsContainer = checkEventTargetElement(HTMLElement, e.currentTarget);
-    let node = checkEventTargetElement(HTMLElement, e.target);
-
-    while (node !== newsContainer) {
-      if (node.classList.contains(SourcesCssSelectors.SourceItem)) {
-        const sourceId = node.getAttribute(DataAttributes.SourceId);
-
-        if (sourceId && newsContainer.getAttribute(DataAttributes.Source) !== sourceId) {
-          newsContainer.setAttribute(DataAttributes.Source, sourceId);
-          super.getResp(
-            {
-              endpoint: ApiEndpoints.Everything,
-              options: {
-                sources: sourceId,
-              },
-            },
-            callback
-          );
-        }
-        return;
-      }
-
-      const parent = node.parentElement;
-      if (parent === null) {
-        break;
-      }
-      node = parent;
+    if (!(e.target instanceof Element)) {
+      return;
     }
+
+    // Ищем ближайший .source__item, но только внутри newsContainer
+    const newsContainer = checkEventTargetElement(HTMLElement, e.currentTarget);
+    const sourceItem = e.target.closest<HTMLElement>(SourcesCssSelectors.SourceItem);
+    if (!sourceItem || sourceItem === newsContainer || !newsContainer.contains(sourceItem)) {
+      return;
+    }
+
+    const sourceId = sourceItem.getAttribute(DataAttributes.SourceId);
+    if (!sourceId) {
+      return;
+    }
+    if (newsContainer.getAttribute(DataAttributes.Source) === sourceId) {
+      return;
+    }
+
+    newsContainer.setAttribute(DataAttributes.Source, sourceId);
+    super.getResp(
+      {
+        endpoint: ApiEndpoints.Everything,
+        options: { sources: sourceId },
+      },
+      callback
+    );
   }
 }

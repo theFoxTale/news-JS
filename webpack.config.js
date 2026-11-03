@@ -6,7 +6,7 @@ import DotenvWebpackPlugin from 'dotenv-webpack';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 
 const baseConfig = {
-    entry: path.resolve(import.meta.dirname, './src/index.js'),
+    entry: path.resolve(import.meta.dirname, './src/index.ts'),
     mode: 'development',
     module: {
         rules: [

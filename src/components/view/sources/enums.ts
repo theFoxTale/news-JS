@@ -5,6 +5,11 @@ export enum SourcesCssSelectors {
   SourceItemName = '.source__item-name',
 }
 
+export enum SourceItemsClassNames {
+  ActiveSource = 'source__item_active',
+  HiddenSource = 'hidden_item',
+}
+
 export enum DataAttributes {
   SourceId = 'data-source-id',
   Source = 'data-source',
