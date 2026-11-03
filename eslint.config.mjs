@@ -89,7 +89,7 @@ export default [
       'webpack.prod.config.js',
       'node_modules/',
       'dist/',
-      'eslint.config.js',
+      'eslint.config.mjs',
     ],
   },
 ];

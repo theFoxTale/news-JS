@@ -1,5 +1,5 @@
 # Игнорировать файлы конфигурации
-eslint.config.js
+eslint.config.mjs
 webpack.config.js
 webpack.dev.config.js
 webpack.prod.config.js
