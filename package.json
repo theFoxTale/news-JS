@@ -3,15 +3,16 @@
     "version": "1.0.0",
     "description": "News API application for RSS School task",
     "main": "webpack.base.config.js",
+    "type": "module",
     "scripts": {
-        "start": "webpack serve --open --config ./webpack.config.js --env mode=dev",
-        "build": "webpack --config ./webpack.config.js --env mode=prod",
-        "predeploy": "npm run build",
-        "deploy": "gh-pages -d dist",
-        "lint": "eslint .",
-        "lint:fix": "eslint . --fix",
-        "format": "prettier --write .",
-        "format:check": "prettier --check ."
+          "start": "webpack serve --open --config ./webpack.config.js --env mode=dev",
+          "build": "webpack --config ./webpack.config.js --env mode=prod",
+          "predeploy": "npm run build",
+          "deploy": "gh-pages -d dist",
+          "lint": "eslint .",
+          "lint:fix": "eslint . --fix",
+          "format": "prettier --write .",
+          "format:check": "prettier --check ."
     },
     "repository": {
         "type": "git",
